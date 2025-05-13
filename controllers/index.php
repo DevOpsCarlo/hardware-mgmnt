@@ -1,21 +1,27 @@
-<?php require("views/partials/head.php"); ?>
+<?php
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  $username = $_POST['username'] ?? '';
+  $password = $_POST['password'] ?? '';
 
+  // Fetch user from the database
+  $stmt = $pdo->prepare("SELECT * FROM users WHERE username = ?");
+  $stmt->execute([$username]);
+  $user = $stmt->fetch();
 
-<main class="container">
-  <div class="logo-container">
-    <img src="assets/image/logo.png" alt="TopRank Logo" class="toprank-image">
-  </div>
-  <div>
-    <h2 class="login-title">Login</h2>
-    <form action="">
-      <div class="input-container">
-        <input type="text" name="username">
-        <input type="password" name="password">
-      </div>
-      <button class="btn btn-submit">Submit</button>
-    </form>
-  </div>
-</main>
+  if ($user && password_verify($password, $user['password'])) {
+    // Password is correct, log the user in
+    $_SESSION['user'] = [
+      'id' => $user['id'],
+      'username' => $user['username'],
+      'role' => $user['role']
+    ];
+    header('Location: /dashboard');
+    exit();
+  } else {
+    $error = "Invalid username or password.";
+    require("views/index.views.php");
+    exit();
+  }
+};
 
-
-<?php require("views/partials/footer.php"); ?>
+require("views/index.views.php");
