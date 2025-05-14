@@ -23,3 +23,22 @@ body {
   font-weight: 600;
   cursor: pointer;
 }
+
+/* Menu Icon General */
+.menu-icon {
+  stroke: #212529;
+  width: 16px;
+  height: 16px;
+}
+
+/* General */
+
+.hidden {
+  display: none;
+}
+
+nav {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
